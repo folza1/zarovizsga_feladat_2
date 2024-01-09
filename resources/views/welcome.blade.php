@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Laravel</title>
 
     <!-- Fonts -->
@@ -38,9 +37,10 @@
         </div>
         <div class="w-1/2 mx-3">
             <label for="city" class="form-label text-lg">Város</label>
-            <select class="form-select" id="city" name="city">
-                <option value="" disabled selected>Válassz várost</option>
-            </select>
+            <input list="cities" class="form-control" id="city" name="city" placeholder="Kezdj el írni!">
+            <datalist id="cities">
+                <!-- Városokat itt fogjuk dinamikusan frissíteni -->
+            </datalist>
         </div>
     </div>
 
@@ -65,7 +65,6 @@
             <input type="password" class="form-control" id="password-confirmation" placeholder="Jelszavad ismét">
         </div>
     </div>
-
 
     <div class="mx-3">
         <p class="text-lg">Nemed:</p>
@@ -110,24 +109,39 @@
         // AJAX kérés küldése a városok lekéréséhez
         axios.get('/get-cities/' + countryId)
             .then(function(response) {
-                var citiesSelect = document.getElementById('city');
-                citiesSelect.innerHTML = '<option value="" disabled selected>Válassz várost</option>';
+                var citiesDatalist = document.getElementById('cities');
+                citiesDatalist.innerHTML = '';
 
-                // Városok hozzáadása a select elemhez
+                // Városok hozzáadása a datalist elemhez
                 response.data.forEach(function(city) {
                     var option = document.createElement('option');
-                    option.value = city.id;
-                    option.text = city.name;
-                    citiesSelect.add(option);
+                    option.value = city.name;  // A város nevét használjuk
+                    option.dataset.cityId = city.id;  // Az id-t adat attribútumként eltároljuk
+                    citiesDatalist.appendChild(option);
                 });
             })
             .catch(function(error) {
                 console.error('Hiba történt:', error);
             });
     });
+
+    // Eseményfigyelő a város input mezőhöz
+    document.getElementById('city').addEventListener('input', function() {
+        var inputCity = this.value;
+        var citiesDatalist = document.getElementById('cities');
+
+        // Megkeressük a városok között azon várost, amelynek a neve egyezik az input értékével
+        var matchingOption = Array.from(citiesDatalist.options).find(function(option) {
+            return option.value === inputCity;
+        });
+
+        if (matchingOption) {
+            // Ha találunk egyezést, beállítjuk az input értékét az option értékére (a város nevére)
+            this.value = matchingOption.value;
+        }
+    });
+
 </script>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"

@@ -7,17 +7,9 @@ use Illuminate\Http\Request;
 
 class CitiesController extends Controller
 {
-    public function getCitiesByCountry(Request $request, $countryId)
+    public function getCitiesByCountry($countryId)
     {
-        $cityName = $request->input('name');
-
-        $query = City::where('country_id', $countryId);
-
-        if ($cityName) {
-            $query->where('name', 'like', '%' . $cityName . '%');
-        }
-
-        $cities = $query->get();
+        $cities = City::where('country_id', $countryId)->get();
 
         return response()->json($cities);
     }

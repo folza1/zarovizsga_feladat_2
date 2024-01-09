@@ -38,9 +38,8 @@
         </div>
         <div class="w-1/2 mx-3">
             <label for="city" class="form-label text-lg">Város</label>
-            <input type="text" class="form-control" id="city" placeholder="Kezdj el gépelni!">
-            <select class="form-select" id="filtered-cities" name="filtered_cities" multiple style="display: none;">
-                <!-- A szűrt városokat ide tesszük be -->
+            <select class="form-select" id="city" name="city">
+                <option value="" disabled selected>Válassz várost</option>
             </select>
         </div>
     </div>
@@ -107,64 +106,24 @@
 <script>
     document.getElementById('country').addEventListener('change', function() {
         var countryId = this.value;
-        var cityInput = document.getElementById('city');
-        var filteredCitiesSelect = document.getElementById('filtered-cities');
 
-        // Az input eseményre reagálva szűrjük a városokat
-        cityInput.addEventListener('input', function() {
-            var cityName = cityInput.value;
+        // AJAX kérés küldése a városok lekéréséhez
+        axios.get('/get-cities/' + countryId)
+            .then(function(response) {
+                var citiesSelect = document.getElementById('city');
+                citiesSelect.innerHTML = '<option value="" disabled selected>Válassz várost</option>';
 
-            // AJAX kérés küldése a városok lekéréséhez
-            axios.get('/get-cities/' + countryId + '?name=' + cityName)
-                .then(function(response) {
-                    // Tisztítjuk a szűrt városokat tartalmazó selectet
-                    filteredCitiesSelect.innerHTML = '';
-
-                    // Városok hozzáadása a szűrt városokat tartalmazó select elemhez
-                    response.data.forEach(function(city) {
-                        var option = document.createElement('option');
-                        option.value = city.id;
-                        option.text = city.name;
-                        filteredCitiesSelect.add(option);
-                    });
-
-                    // A szűrt városokat tartalmazó select megjelenítése
-                    filteredCitiesSelect.style.display = 'block';
-                })
-                .catch(function(error) {
-                    console.error('Hiba történt:', error);
+                // Városok hozzáadása a select elemhez
+                response.data.forEach(function(city) {
+                    var option = document.createElement('option');
+                    option.value = city.id;
+                    option.text = city.name;
+                    citiesSelect.add(option);
                 });
-        });
-
-        // Eseményfigyelő a filteredCitiesSelect elemhez
-        filteredCitiesSelect.addEventListener('click', function() {
-            // A szűrt városokat tartalmazó select becsukása
-            this.style.display = 'none';
-        });
-
-        // Eseményfigyelő az input elemhez, amikor elveszíti a fókuszt (blurred)
-        cityInput.addEventListener('blur', function() {
-            // Ha az input mező elveszti a fókuszt, a szűrt városokat tartalmazó select becsukása
-            filteredCitiesSelect.style.display = 'none';
-        });
-
-        // Eseményfigyelő a filteredCitiesSelect elemhez hover eseményre
-        filteredCitiesSelect.addEventListener('mouseover', function(event) {
-            // Ellenőrizzük, hogy valóban az option elemre húzta-e a kurzort a felhasználó
-            if (event.target.tagName === 'OPTION') {
-                // Hover hatás: háttérszín szürke
-                event.target.style.background = 'lightgrey';
-            }
-        });
-
-        // Eseményfigyelő a filteredCitiesSelect elemhez hover befejeződésekor
-        filteredCitiesSelect.addEventListener('mouseout', function(event) {
-            // Ellenőrizzük, hogy valóban az option elemről vette-e el a kurzort a felhasználó
-            if (event.target.tagName === 'OPTION') {
-                // Hover hatás befejeződött: visszaállítjuk a háttérszínt
-                event.target.style.background = 'initial';
-            }
-        });
+            })
+            .catch(function(error) {
+                console.error('Hiba történt:', error);
+            });
     });
 </script>
 

@@ -19,4 +19,3 @@ Route::get('/', [CountryController::class, 'index']);
 
 Route::get('/get-cities/{countryId}', [CitiesController::class, 'getCitiesByCountry']);
 
-

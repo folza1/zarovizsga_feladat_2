@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CitiesController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CountryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [CountryController::class, 'index']);
+
+Route::get('/get-cities/{countryId}', [CitiesController::class, 'getCitiesByCountry']);
+
+

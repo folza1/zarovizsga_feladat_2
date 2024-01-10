@@ -25,7 +25,8 @@ class RegisterController extends Controller
 
         $attributes['password'] = Hash::make($request->input('password'));
 
-        User::create($attributes);
-        return redirect('/')->with('success', 'A fiókod sikeresen létrehozva!');
+        $user=User::create($attributes);
+        $token = $user->createToken('registration-token')->plainTextToken;
+        return redirect('/login')->with('success', 'A fiókod sikeresen létrehozva!');
     }
 }

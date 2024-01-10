@@ -172,6 +172,5 @@
                 this.value = matchingOption.value;
             }
         });
-
     </script>
 </x-layout>

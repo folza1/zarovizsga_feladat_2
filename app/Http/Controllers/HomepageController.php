@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 
-class CountryController extends Controller
+class HomepageController extends Controller
 {
     public function index()
     {

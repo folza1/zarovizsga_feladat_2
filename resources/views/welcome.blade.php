@@ -1,4 +1,5 @@
 <x-layout>
+    <p class="mt-5 text-3xl text-center font-bold">Regisztráció</p>
     <form action="{{ route('register') }}" method="POST" class="w-1/3 mx-auto mt-10 border rounded p-3">
         @csrf
         <div class="mb-3 flex">

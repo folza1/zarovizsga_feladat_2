@@ -2,12 +2,11 @@
 
 use App\Http\Controllers\CitiesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CountryController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,13 +18,14 @@ use App\Http\Controllers\CountryController;
 |
 */
 
-Route::get('/', [CountryController::class, 'index'])->middleware('guest');
+Route::get('/', [HomepageController::class, 'index'])->middleware('guest');
 
 Route::get('/get-cities/{countryId}', [CitiesController::class, 'getCitiesByCountry'])->middleware('guest');
 
 Route::post('/register', [RegisterController::class, 'index'])->name('register');
 
 Route::get('/password/reset', [PasswordResetController::class, 'reset'])->name('password_request');
+Route::post('/password/reset', [PasswordResetController::class, 'send']);
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login']);

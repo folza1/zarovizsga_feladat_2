@@ -26,6 +26,7 @@ Route::post('/register', [RegisterController::class, 'index'])->name('register')
 
 Route::get('/password/reset', [PasswordResetController::class, 'reset'])->name('password_request');
 Route::post('/password/reset', [PasswordResetController::class, 'send']);
+Route::get('/jelszo/reset/{token}', [PasswordResetController::class, 'showResetForm']);
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login']);

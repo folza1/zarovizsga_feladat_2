@@ -42,4 +42,9 @@ class PasswordResetController extends Controller
         return redirect()->back()->with('success', 'Az email-t kiküldtük!');
     }
 
+    public function showResetForm()
+    {
+        return view('password_reset_form');
+    }
+
 }
